@@ -11,9 +11,9 @@ SELECT
     TIME(T0.begin_waiting_date) AS 'Hora da Atribuição',
     DATEDIFF(T0.begin_waiting_date, T0.date) AS 'Dias até Atribuir',
 CONCAT(
-    FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date) / 60), 'H, ',
-    MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date), 60), 'M'
-) AS 'Tempo até Atribuição',
+        FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date) / 60), 'H, ',
+        MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date), 60), 'M'
+      ) AS 'Tempo até Atribuição',
     T3.completename AS 'Categoria',
     CASE 
         WHEN T0.status = 1 THEN 'Novo'
@@ -29,11 +29,11 @@ CONCAT(
     DATEDIFF(T0.solvedate, T0.date) AS 'Dias até solução',
     DATEDIFF(T0.closedate, T0.date) AS 'Dias até fechar',
     CONCAT(
-    	FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate) / 60), 'H, ',
-    	MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate), 60), 'M'
-		  ) AS 'Hrs em aberto'
+        FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate) / 60), 'H, ',
+        MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate), 60), 'M'
+          ) AS 'Hrs em aberto'
 FROM
-   	glpi_tickets AS T0
+    glpi_tickets AS T0
 	INNER JOIN glpi_users AS T1 ON T0.users_id_recipient = T1.id
 	INNER JOIN glpi_users AS T2 ON T0.users_id_lastupdater = T2.id
 	INNER JOIN glpi_itilcategories AS T3 ON T0.itilcategories_id = T3.id
