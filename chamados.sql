@@ -13,7 +13,7 @@ SELECT
 CONCAT(
         FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date) / 60), 'H, ',
         MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.begin_waiting_date), 60), 'M'
-      ) AS 'Tempo até Atribuição',
+    ) AS 'Tempo até Atribuição',
     T3.completename AS 'Categoria',
     CASE 
         WHEN T0.status = 1 THEN 'Novo'
@@ -26,14 +26,19 @@ CONCAT(
     END AS 'Status',
     CONCAT(T1.firstname, ' ', T1.realname) AS 'Aberto Por',
     CONCAT(T2.firstname, ' ', T2.realname) AS 'Ultima Atualizaçao Por',
+    CONCAT(T5.firstname, ' ', T5.realname) AS 'Técnico que atendeu',
     DATEDIFF(T0.solvedate, T0.date) AS 'Dias até solução',
     DATEDIFF(T0.closedate, T0.date) AS 'Dias até fechar',
     CONCAT(
         FLOOR(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate) / 60), 'H, ',
         MOD(TIMESTAMPDIFF(MINUTE, T0.date, T0.closedate), 60), 'M'
-          ) AS 'Hrs em aberto'
+        ) AS 'Hrs em aberto'
 FROM
     glpi_tickets AS T0
 	INNER JOIN glpi_users AS T1 ON T0.users_id_recipient = T1.id
 	INNER JOIN glpi_users AS T2 ON T0.users_id_lastupdater = T2.id
 	INNER JOIN glpi_itilcategories AS T3 ON T0.itilcategories_id = T3.id
+    LEFT JOIN (SELECT tickets_id, users_id FROM glpi_tickets_users WHERE type = 2 GROUP BY tickets_id) AS T4 ON T0.id = T4.tickets_id
+    LEFT JOIN glpi_users AS T5 ON T4.users_id = T5.id
+    
+    
